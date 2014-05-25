@@ -1,7 +1,7 @@
 #ifndef __GOOGLE_DRIVE_API_H__
 #define __GOOGLE_DRIVE_API_H__
 #include <string.h>
-#include "../librest/rest.h"
+#include "librest/rest.h"
 
 /* convenience functions */
 const char * 	JSON_GET_STRING		(json_object*, char*       );
