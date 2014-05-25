@@ -31,7 +31,7 @@ int main(int argc, char ** argv){
 	json_object_put(gdrive_files_list("title='test' and mimeType = 'application/vnd.google-apps.folder'",0));*/
 	char * next_page_token = NULL;
 	do {
-		json_object * changes = gdrive_get_changes(next_page_token,100);
+		json_object * changes = gdrive_get_changes(next_page_token,0,10);
 //		printf("%s\n",json_object_to_json_string_ext(changes,JSON_C_TO_STRING_PRETTY));
 		free(next_page_token);
 		next_page_token = JSON_GET_STRING(changes,"nextPageToken");

@@ -74,8 +74,8 @@ FILE * gdrive_get (char * file_id){
 	return ret;
 }
 
-json_object * gdrive_get_changes(const char* pageToken, int max){
-	char * params[4];
+json_object * gdrive_get_changes(const char* pageToken,const char*startChangeId, int max){
+	char * params[5];
 	int i = 0; 
 	rest_build_param(&params[i++], "access_token",KEY);
 	if (max > 0){
@@ -85,6 +85,9 @@ json_object * gdrive_get_changes(const char* pageToken, int max){
 	}
 	if (pageToken != NULL){
 		rest_build_param(&params[i++], "pageToken",pageToken);
+	}
+	if (startChangeId != NULL){
+		rest_build_param(&params[i++], "startChangeId",startChangeId);
 	}
 	params[i] = NULL;
 	i = 0;
