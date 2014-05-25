@@ -1,0 +1,6 @@
+*.lo
+*.wo
+*.exe
+gdrive
+*.zip
+*.json
