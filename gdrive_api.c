@@ -177,6 +177,7 @@ json_object * gdrive_files_put(const char * path, FILE * file){
 			dir = temp_dir;
 			p = delim+1;	
 		} while (p < end);
+		printf("id = '%s'\n",dir);
 		parent_id = json_object_new_string(dir==NULL?"root":dir);
 		fname = p;
 	}	
