@@ -209,7 +209,7 @@ json_object * gdrive_files_put(const char * path, FILE * file){
 	json_object_object_add(
 		parent,
 		"id",
-		json_object_new_string("0BzrbZp6jFZojc0d5TWRCcHQwWHM")
+		parent_id
 	);
 	json_object * parents = json_object_new_array();
 	json_object_array_add(parents,parent);
