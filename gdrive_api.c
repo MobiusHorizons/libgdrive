@@ -19,6 +19,13 @@ const char * JSON_GET_STRING(json_object * obj, char * name){
 	return NULL;
 }
 
+long JSON_GET_INT64(json_object * obj, char * object){
+	if (json_object_object_get_ex(obj,object,&obj)){
+		return json_object_get_int64(obj);
+	}
+	return 0; 
+}
+
 bool JSON_GET_BOOL(json_object * obj, char * object, bool def){
 	if (json_object_object_get_ex(obj,object,&obj)){
 		return json_object_get_boolean(obj);

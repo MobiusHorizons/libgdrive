@@ -5,6 +5,7 @@
 
 /* convenience functions */
 const char * 	JSON_GET_STRING		(json_object*, char*        );
+long	 	JSON_GET_INT64		(json_object*, char*        );
 bool 		JSON_GET_BOOL		(json_object*, char*, bool  );
 
 void		gdrive_init		(const char *,json_object*  );
