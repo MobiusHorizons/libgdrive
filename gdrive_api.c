@@ -145,7 +145,7 @@ json_object * gdrive_files_put(char * fname, FILE * file){
 
 	/* set up arguments */
 	rest_args args;
-	args.url = "https://www.googleapis.com/upload/drive/v2/files?uploadType=resumable&convert=true";
+	args.url = "https://www.googleapis.com/upload/drive/v2/files?uploadType=resumable";
 	args.headers = headers;
 	args.params = NULL;
 	args.content_type = NULL;
@@ -300,12 +300,14 @@ char * gdrive_refresh_token (char * refresh_token){
 }
 
 void gdrive_init(const char * token, json_object * init){
+	curl_global_init(CURL_GLOBAL_DEFAULT);
 	KEY = strdup(token);
 	cache = init;
 }
 
 void gdrive_cleanup(){
 	free(KEY);
+	curl_global_cleanup();
 }
 
 

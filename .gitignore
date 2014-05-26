@@ -1,5 +1,6 @@
 *.lo
 *.wo
+*.o
 *.exe
 gdrive
 *.zip
