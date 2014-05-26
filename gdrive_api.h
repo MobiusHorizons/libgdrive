@@ -15,7 +15,7 @@ json_object * 	gdrive_get_changes	(const char*,const char*,int);
 void 		gdrive_upload		(char*,FILE*                );
 json_object * 	gdrive_files_list	(char*, int                 );
 json_object * 	gdrive_files_list_children(char*,int                );
-json_object * 	gdrive_files_put	(char*, FILE*               );
+json_object * 	gdrive_files_put	(const char*, FILE*         );
 char * 		gdrive_refresh_token 	(char*                      );
 void		gdrive_cleanup		(		            );
 

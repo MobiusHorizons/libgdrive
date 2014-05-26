@@ -127,10 +127,59 @@ void gdrive_upload(char * url,FILE * file){
 	free(headers[0]);
 }
 
-json_object * gdrive_files_put(char * fname, FILE * file){
+char * get_folder_id(const char * dir, const char * parent_id){
+	char * format = "title = '%s' and "
+		"mimeType = 'application/vnd.google-apps.folder' and " 
+		"'%s' in parents";
+	printf (format,	dir,parent_id); printf("\n");
+	char * q = malloc(strlen(format)+strlen(dir)+strlen(parent_id));
+	sprintf(q,format,dir,parent_id);
+	json_object * response = gdrive_files_list(q,0);
+	json_object * items;
+	json_object_object_get_ex(response,"items",&items);
+	const char * temp_id = JSON_GET_STRING(json_object_array_get_idx(items,0),"id");
+	printf("id = '%s'\n",temp_id);
+	char * id = NULL;
+	if (temp_id != NULL) id = strdup(id);
+	json_object_put(response);
+	return id;
+}	
+
+json_object * gdrive_files_put(const char * path, FILE * file){
 	char * headers[2];
 	char * bearer = malloc(strlen(KEY) + strlen("Bearer ")+1);
 	char * return_headers[10]; 
+	char * full_path = strdup(path);
+	char * p = full_path;
+	char * end = full_path + strlen(path); // points at the null terminator.
+	char * fname;
+	json_object * parent_id;
+	if (p[0] == '/'){ // valid path starts with "/"
+		p++;
+		char * dir = strdup("root");
+		do {
+			printf("'%s'\n",dir);
+			// find next slash
+			char * delim = p + strcspn(p,"/"); 
+			while(delim[-1] == '\\'){
+				int i=1;
+				while (
+					(delim - i) > p 
+					&& delim[-1*i] =='\\'
+				) i++ ; // count '\' 
+				if (i%2 == 1) break;
+				delim = delim +1 + strcspn(delim+1,"/");
+			}
+			if (delim == end) break;
+			delim[0] = '\0';
+			char * temp_dir = get_folder_id(p,dir);	
+			free(dir);
+			dir = temp_dir;
+			p = delim+1;	
+		} while (p < end);
+		parent_id = json_object_new_string(dir==NULL?"root":dir);
+		fname = p;
+	}	
 	int i = 0;
 	for (i = 0; i < 10; i ++){
 		if (i == 9)return_headers[i] = "";
@@ -186,6 +235,7 @@ json_object * gdrive_files_put(char * fname, FILE * file){
 		free(return_headers[i]);
 		i++;
 	}
+	free(full_path);
 	free(headers[0]);
 	return NULL;
 }
@@ -194,7 +244,7 @@ json_object * gdrive_files_list(char * query, int pageToken){
 	char * params[4]; 
 	int i = 0;
 	rest_build_param(&params[i++], "access_token",KEY);
-	printf("%s\n",params[0]);
+//	printf("%s\n",params[0]);
 	if (pageToken > 0){
 		char  pageToken_string[128];
 		sprintf(pageToken_string,"%d",pageToken);
@@ -207,10 +257,10 @@ json_object * gdrive_files_list(char * query, int pageToken){
 	params[i] = NULL;
 
 	buffer resp = rest_get_buffer(params,"https://www.googleapis.com/drive/v2/files");
-	printf("%s\n",resp.data);
+//	printf("%s\n",resp.data);
 	json_object * response = json_tokener_parse(resp.data);
 	resp = buffer_free(resp);
-	json_object * list = json_object_object_get(response,"items");
+/*	json_object * list = json_object_object_get(response,"items");
 	for (i = 0; i < json_object_array_length(list); i++){
 		const char * folder_id = JSON_GET_STRING(json_object_array_get_idx(list,i),"id");
 		const char * title = JSON_GET_STRING(json_object_array_get_idx(list,i),"title");
@@ -223,8 +273,8 @@ json_object * gdrive_files_list(char * query, int pageToken){
 			,(int)30 - strlen(title)
 			," "
 			,folder_id
-		); 
-	}	
+		);
+	}*/
 	i=0;
 	while (params[i] != NULL){ free(params[i++]);}
 	return response;
