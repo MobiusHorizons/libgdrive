@@ -4,6 +4,7 @@ ifeq ($(CC),cc)
 OBJ:=.lo
 EXE:=
 SO:=.so
+CCFLAGS:=$(CCFLAGS) -fPIC
 else
 OBJ:=.wo
 EXE:=.exe
