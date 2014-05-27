@@ -140,7 +140,7 @@ char * get_folder_id(const char * dir, const char * parent_id){
 	const char * temp_id = JSON_GET_STRING(json_object_array_get_idx(items,0),"id");
 	printf("id = '%s'\n",temp_id);
 	char * id = NULL;
-	if (temp_id != NULL) id = strdup(id);
+	if (temp_id != NULL) id = strdup(temp_id);
 	json_object_put(response);
 	return id;
 }	
@@ -153,6 +153,11 @@ json_object * gdrive_files_put(const char * path, FILE * file){
 	char * p = full_path;
 	char * end = full_path + strlen(path); // points at the null terminator.
 	char * fname;
+	int i = 0;
+	for (i = 0; i < 10; i ++){
+		if (i == 9)return_headers[i] = "";
+		else return_headers[i] = NULL;
+	}
 	json_object * parent_id;
 	if (p[0] == '/'){ // valid path starts with "/"
 		p++;
@@ -181,11 +186,6 @@ json_object * gdrive_files_put(const char * path, FILE * file){
 		parent_id = json_object_new_string(dir==NULL?"root":dir);
 		fname = p;
 	}	
-	int i = 0;
-	for (i = 0; i < 10; i ++){
-		if (i == 9)return_headers[i] = "";
-		else return_headers[i] = NULL;
-	}
 	strcpy(bearer,"Bearer "); strcat(bearer,KEY);
 	rest_build_header(&headers[0],"Authorization", bearer);
 	free(bearer);
