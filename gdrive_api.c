@@ -327,6 +327,30 @@ json_object * gdrive_files_list_children(char * id, int pageToken){
 	json_object_put(response);
 }
 
+json_object * gdrive_authorize_token (char * token,const char * cid,const char *csec){
+	char * params[6];
+	rest_build_param(&params[0],"code",token);
+	rest_build_param(&params[1],"client_id",cid);
+	rest_build_param(&params[2],"client_secret",csec);
+	params[3] = "redirect_uri=urn:ietf:wg:oauth:2.0:oob";
+	params[4] = "grant_type=authorization_code";
+	params[5] = NULL;
+
+	printf("doing post\n");
+	buffer resp = rest_post(params,"https://accounts.google.com/o/oauth2/token");
+	printf("%s\n",resp.data);
+	json_object * response = json_tokener_parse(resp.data);
+	
+//	char * access_token = strdup(JSON_GET_STRING(response,"access_token"));
+
+//	json_object_put(response);
+	buffer_free(resp);
+	free(params[0]);
+	free(params[1]);
+	free(params[2]);
+	return response;
+}
+
 char * gdrive_refresh_token (char * refresh_token){
 	char * params[5];
 	rest_build_param(&params[0],"refresh_token",refresh_token);
