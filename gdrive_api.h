@@ -8,6 +8,7 @@ const char * 	JSON_GET_STRING		(json_object*, char*          );
 long	 	JSON_GET_INT64		(json_object*, char*          );
 bool 		JSON_GET_BOOL		(json_object*, char*, bool    );
 
+const char *	gdrive_access_token	(const char *                 );
 void		gdrive_init		(const char *,json_object*    );
 json_object * 	gdrive_get_metadata	(const char *                 );
 FILE * 		gdrive_get 		(char *                       );

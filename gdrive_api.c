@@ -374,6 +374,14 @@ char * gdrive_refresh_token (char * refresh_token){
 	return access_token;
 }
 
+const char * gdrive_access_token(const char * val){
+	if (val != NULL){
+		free(KEY);
+		KEY = strdup(val);
+	}
+	return KEY;
+}
+
 void gdrive_init(const char * token, json_object * init){
 	curl_global_init(CURL_GLOBAL_DEFAULT);
 	KEY = strdup(token);
